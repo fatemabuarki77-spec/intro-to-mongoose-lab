@@ -1,22 +1,30 @@
 const mongoose = require("mongoose");
 const Recipe = require(`./Recipe`);
+const sweet1 = {
+  name: "Chocolate Cake molten",
+  instructions: "bake at 180C",
+  prepTime: 120,
+  difficulty: "easy",
+};
+const sweet2 = {
+  name: "Um Ali Sweet",
+  instructions: "bake at 180C",
+  prepTime: 120,
+  difficulty: "Medium",
+};
+const chocoId = `6a4d0f622775ef6ef97da33a`;
+const umAliId = `6a4d0f891d162c0c430e20cd`;
+const newData = { name: `Date Cake` };
 
-async function createNewRecepie() {
+async function createNewRecepie(newRecipe) {
   try {
-    const newRecipe = await Recipe.create({
-      name: "Chocolate Cake molten",
-      instructions: "bake at 180C",
-      prepTime: 120,
-      difficulty: "easy",
-    });
-
-    console.log(createNewRecepie);
+    const newerRecipe = await Recipe.create(newRecipe);
   } catch (err) {
     console.log("ERROR:", err);
   }
 }
 
-//createNewRecepie();
+//createNewRecepie(sweet2);
 
 async function getAllTheRecepies() {
   try {
@@ -33,30 +41,44 @@ async function getAllTheRecepies() {
 }
 //getAllTheRecepies();
 
-async function getRecipeById() {
-  const foundRecipe = await Recipe.findById(`6a4ce5c789772b445d439528`);
-  console.log(foundRecipe);
+async function getRecipeById(id) {
+  try {
+    const foundRecipe = await Recipe.findById(id);
+    console.log(foundRecipe);
+  } catch (err) {
+    console.log("No recipe with this ID exists.");
+  }
 }
-//getRecipeById();
+//getRecipeById(chocoId);
 
-async function updateRecipeById() {
-  const updatedRecipe = await Recipe.findByIdAndUpdate(
-    `6a4ce5c789772b445d439528`,
-    { name: `UM ALI MINI SWEET` },
-    { new: true },
-  );
-  console.log(updatedRecipe);
+async function updateRecipeById(recipeId, newRecipeData) {
+  try {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      recipeId,
+      newRecipeData,
+      { new: true },
+    );
+    if (updatedRecipe) {
+      console.log(updatedRecipe);
+    } else {
+      console.log("Recipe not found.");
+    }
+  } catch (err) {
+    console.error("Cannot update recipe:", err);
+  }
 }
-//updateRecipeById();
 
-async function deleteRecipe() {
-  const deletedRecipie = await Recipe.findByIdAndDelete(
-    "6a4ce63d51e6ca7bc287a8f4",
-  );
-  console.log("Recipe successfully deleted.");
+//updateRecipeById(chocoId, newData);
+
+async function deleteRecipe(recipeId) {
+  try {
+    const deletedRecipie = await Recipe.findByIdAndDelete(recipeId);
+  } catch (err) {
+    console.log("Recipe successfully deleted.", err);
+  }
 }
 
-//deleteRecipe();
+//deleteRecipe(chocoId);
 
 module.exports = {
   createNewRecepie,
